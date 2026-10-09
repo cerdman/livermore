@@ -13,10 +13,11 @@ livermore/
 ├── src/                    # Main source code
 │   └── livermore/         # Package root
 │       ├── __init__.py
+│       ├── observatory.py # Usage observatory CLI
 │       ├── core/          # Core instrumentation logic
 │       ├── harness/       # Harness management
 │       └── utils/         # Utility functions
-├── tests/                 # Test suite
+├── tests/                 # Test suite (test_observatory.py)
 ├── docs/                  # Documentation
 ├── examples/              # Example usage
 ├── .gitignore

@@ -6,7 +6,7 @@ from contextlib import redirect_stdout
 from pathlib import Path
 from types import SimpleNamespace
 
-import observatory
+from livermore import observatory
 
 
 def write_lines(path, rows):

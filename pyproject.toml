@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.8"
 license = {text = "MIT"}
 authors = [
-    {name = "cerdman", email = ""}
+    {name = "cerdman"}
 ]
 keywords = ["instrumentation", "harness", "profiling"]
 classifiers = [
@@ -32,3 +32,6 @@ package-dir = {"" = "src"}
 
 [tool.setuptools.packages]
 find = {where = ["src"]}
+
+[project.scripts]
+observatory = "livermore.observatory:main"
