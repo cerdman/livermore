@@ -1,8 +1,3 @@
-"""Livermore - Code harness instrumentation library."""
+"""Local-first AI usage observatory."""
 
 __version__ = "0.1.0"
-__author__ = "cerdman"
-
-from . import core, harness, utils
-
-__all__ = ["core", "harness", "utils"]

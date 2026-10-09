@@ -1,6 +1,6 @@
 # Subscription tokenomics: reconstructed harness and calculations
 
-Source: `Tokenomics.md` (October 5, 2026) and the 20 local WebP figures. This is a reconstruction of the published method, not recovered source code or raw measurements. The folder contains no harness, API logs, meter time series, or spreadsheet.
+Source: `references/Tokenomics.md` (October 5, 2026) and the 20 local WebP figures in `references/`. These third-party files are kept locally and excluded from Git. This is a reconstruction of the published method, not recovered source code or raw measurements. The folder contains no harness, API logs, meter time series, or spreadsheet.
 
 ## What the harness measures
 
