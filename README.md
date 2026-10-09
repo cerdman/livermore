@@ -4,12 +4,14 @@ A local-first AI usage observatory. It reads Codex and Claude Code session logs,
 
 ## Start here
 
-The project uses Python 3.8 or newer and has no runtime dependencies. From the repository root:
+The project uses Python 3.8 or newer and has no runtime dependencies. With [uv](https://docs.astral.sh/uv/getting-started/installation/) installed, run this from the repository root:
 
 ```sh
-python3 -m pip install .
+uv tool install .
 observatory --help
 ```
+
+If your shell cannot find `observatory`, run `uv tool update-shell` and open a new terminal.
 
 See the [usage guide](docs/usage.md) for scan, export, ingest, billing-cycle, and pricing examples. The [design](docs/design.md) explains the data model, and the [source-model analysis](docs/reverse-engineering.md) documents the research behind it.
 
