@@ -1,0 +1,18 @@
+{
+  "prices": [
+    {
+      "source": "codex",
+      "model": "gpt-6-sol",
+      "effective_from": "2026-10-08",
+      "effective_to": null,
+      "fresh_input_per_mtok": 2.0,
+      "cache_write_5m_per_mtok": 2.5,
+      "cache_write_1h_per_mtok": 2.5,
+      "cache_write_unknown_per_mtok": 2.5,
+      "cache_read_per_mtok": 0.2,
+      "output_per_mtok": 10.0,
+      "price_scope": "Standard processing, text, short context; excludes tool fees and regional premiums",
+      "source_url": "https://developers.openai.com/api/docs/models/gpt-6-sol"
+    }
+  ]
+}

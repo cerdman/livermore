@@ -1,0 +1,16 @@
+{
+  "prices": [
+    {
+      "source": "example",
+      "model": "replace-with-exact-model-id",
+      "effective_from": "2026-10-01",
+      "effective_to": null,
+      "fresh_input_per_mtok": 0,
+      "cache_write_5m_per_mtok": 0,
+      "cache_write_1h_per_mtok": 0,
+      "cache_read_per_mtok": 0,
+      "output_per_mtok": 0,
+      "source_url": "replace-with-dated-provider-price-source"
+    }
+  ]
+}
