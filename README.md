@@ -1,7 +1,35 @@
-# AI usage observatory
+# Livermore
 
-A local-first, metadata-only prototype for tracking coding-agent usage across machines and harnesses. It imports Codex and Claude Code session logs, records token categories and usage-meter snapshots in SQLite, and exports portable NDJSON for ingestion elsewhere. It can estimate API-equivalent usage value from a versioned price file and record completed work and subscription cycles. It does not generate traffic to exhaust a subscription.
+Code harness instrumentation library for Python.
 
-Start with the [setup and command guide](OBSERVATORY_README.md), then see the [design](OBSERVATORY_DESIGN.md) and [source-model analysis](REVERSE_ENGINEERING.md).
+## Overview
 
-The original third-party article and its figures are intentionally not included in this repository. The analysis names those local source files so its evidence can be checked by someone who has access to them.
+Livermore provides tools for instrumenting and analyzing code harnesses, enabling detailed tracking and profiling of code execution.
+
+## Project Structure
+
+```
+livermore/
+├── src/                    # Main source code
+│   └── livermore/         # Package root
+│       ├── __init__.py
+│       ├── core/          # Core instrumentation logic
+│       ├── harness/       # Harness management
+│       └── utils/         # Utility functions
+├── tests/                 # Test suite
+├── docs/                  # Documentation
+├── examples/              # Example usage
+├── .gitignore
+├── LICENSE
+├── README.md
+├── pyproject.toml         # Python project configuration
+└── requirements.txt       # Dependencies
+```
+
+## Getting Started
+
+TBD
+
+## License
+
+MIT License
