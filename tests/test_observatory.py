@@ -182,8 +182,12 @@ class ScanTests(TemporaryTest):
         archive.parent.mkdir(parents=True)
         archive.write_bytes(b"not really zstd")
         output = self.scan(codex, claude)
-        if not observatory.zstd_available():
+        if observatory.zstd_available():
+            self.assertIn("codex_files_unreadable: 1", output)
+        else:
             self.assertIn("codex_compressed_skipped: 1", output)
+        # The good files are still imported either way.
+        self.assertIn("unique_usage_events_in_db: 2", output)
 
 
 class MigrationTests(TemporaryTest):

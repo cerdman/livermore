@@ -257,6 +257,10 @@ def add_request_metric(db, row):
         tuple(row.get(field) for field in REQUEST_FIELDS))
 
 
+class ArchiveError(Exception):
+    """A compressed session file could not be decompressed."""
+
+
 def _zstd_decompressor():
     try:
         from compression import zstd  # Python 3.14+
@@ -280,7 +284,11 @@ def _open_text(path):
         decompress = _zstd_decompressor()
         if decompress is None:
             raise RuntimeError("zstd support needs Python 3.14+ or `pip install zstandard`")
-        return io.StringIO(decompress(path.read_bytes()).decode("utf-8", errors="replace"))
+        try:
+            data = decompress(path.read_bytes())
+        except Exception as error:  # zstd errors differ between stdlib and zstandard
+            raise ArchiveError(f"{path.name}: {error}") from error
+        return io.StringIO(data.decode("utf-8", errors="replace"))
     return path.open(encoding="utf-8", errors="replace")
 
 
@@ -446,7 +454,13 @@ def scan(args):
                                                                   stat.st_mtime_ns):
                         totals[f"{source}_files_unchanged"] += 1
                         continue
-                    usage, meters = importer(path, db, args.machine_id, args.account_alias)
+                    try:
+                        usage, meters = importer(path, db, args.machine_id,
+                                                 args.account_alias)
+                    except ArchiveError as error:
+                        print(f"warning: skipping unreadable archive {error}", file=sys.stderr)
+                        totals[f"{source}_files_unreadable"] += 1
+                        continue
                     db.execute("INSERT OR REPLACE INTO scan_files VALUES (?,?,?,?)",
                                (args.machine_id, path_hash, stat.st_size, stat.st_mtime_ns))
                     db.commit()
