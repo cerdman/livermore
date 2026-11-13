@@ -4,28 +4,36 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "livermore"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Local-first AI usage observatory"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [
     {name = "cerdman"}
 ]
-keywords = ["AI usage", "tokens", "observability"]
+keywords = ["AI usage", "tokens", "observability", "opentelemetry"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 ]
+
+[project.optional-dependencies]
+# Reads Codex's archived .jsonl.zst sessions on Python 3.10-3.13 (3.14+ has zstd built in).
+zstd = ["zstandard>=0.22"]
 
 [project.urls]
 Repository = "https://github.com/cerdman/livermore"
+
+[project.scripts]
+observatory = "livermore.observatory:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
@@ -33,5 +41,13 @@ package-dir = {"" = "src"}
 [tool.setuptools.packages]
 find = {where = ["src"]}
 
-[project.scripts]
-observatory = "livermore.observatory:main"
+[tool.setuptools.dynamic]
+version = {attr = "livermore.__version__"}
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "N"]
