@@ -1,0 +1,14 @@
+.git
+.github
+.venv
+**/__pycache__
+*.egg-info
+build
+dist
+references
+*.sqlite3
+*.sqlite3-*
+*.ndjson
+prices.json
+tests
+docs

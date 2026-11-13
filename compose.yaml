@@ -1,0 +1,36 @@
+# Receiver: docker compose up -d
+# One-off scan of this machine's transcripts into the same volume:
+#   MACHINE_ID=desktop ACCOUNT_ALIAS=personal docker compose run --rm scan
+# Report:
+#   docker compose run --rm receiver report --month 2026-11
+services:
+  receiver:
+    build: .
+    image: livermore:latest
+    restart: unless-stopped
+    ports:
+      # Localhost only. To accept other machines, publish on a LAN address and set
+      # LIVERMORE_TOKEN, then send "Authorization=Bearer <token>" from each sender.
+      - "127.0.0.1:4318:4318"
+    environment:
+      LIVERMORE_TOKEN: ${LIVERMORE_TOKEN:-}
+    volumes:
+      - livermore-data:/data
+
+  scan:
+    build: .
+    image: livermore:latest
+    profiles: ["scan"]
+    command:
+      - scan
+      - --machine-id=${MACHINE_ID:?set MACHINE_ID}
+      - --account-alias=${ACCOUNT_ALIAS:?set ACCOUNT_ALIAS}
+      - --codex-root=/sources/codex
+      - --claude-root=/sources/claude
+    volumes:
+      - livermore-data:/data
+      - ${HOME:-${USERPROFILE}}/.codex:/sources/codex:ro
+      - ${HOME:-${USERPROFILE}}/.claude:/sources/claude:ro
+
+volumes:
+  livermore-data:
