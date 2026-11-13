@@ -18,14 +18,22 @@ You pay a flat monthly fee for Codex or Claude Code, and the logs that would tel
 
 ## Start here
 
-The project uses Python 3.10 or newer and has no required runtime dependencies. With [uv](https://docs.astral.sh/uv/getting-started/installation/) installed, run this from the repository root:
+You need [uv](https://docs.astral.sh/uv/getting-started/installation/); it fetches a suitable Python (3.10 or newer) if you don't have one. Install straight from GitHub, no clone needed:
 
 ```sh
-uv tool install ".[zstd]"
-observatory --help
+uv tool install git+https://github.com/cerdman/livermore
+livermore --help
 ```
 
-The `zstd` extra lets Python 3.10–3.13 read the compressed `.jsonl.zst` files Codex keeps for older sessions; Python 3.14 reads them without it. Without either, `scan` reports how many it skipped. If your shell cannot find `observatory`, run `uv tool update-shell` and open a new terminal.
+To try it without installing anything:
+
+```sh
+uvx --from git+https://github.com/cerdman/livermore livermore --help
+```
+
+Update later with `uv tool upgrade livermore`. If your shell cannot find `livermore`, run `uv tool update-shell` and open a new terminal. The older `observatory` command name still works.
+
+The only dependency is `zstandard`, which is installed on Python 3.10–3.13 so `scan` can read the compressed `.jsonl.zst` files Codex keeps for older sessions; Python 3.14 has this built in. Working from a clone instead? Run `uv tool install .` in the repository root.
 
 See the [usage guide](docs/usage.md) for scan, OpenTelemetry, Docker, export, ingest, billing-cycle, and pricing examples. The [design](docs/design.md) explains the data model, and the [source-model analysis](docs/reverse-engineering.md) documents the research behind it.
 
@@ -33,7 +41,7 @@ See the [usage guide](docs/usage.md) for scan, OpenTelemetry, Docker, export, in
 
 ```text
 src/livermore/observatory.py  CLI, importers, reports, and data model
-src/livermore/otel.py         OTLP/HTTP JSON receiver (`observatory serve`)
+src/livermore/otel.py         OTLP/HTTP JSON receiver (`livermore serve`)
 tests/                       Tests
 docs/                        Usage, design, and source analysis
 pricebooks/                  Example and dated price data

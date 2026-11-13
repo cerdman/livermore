@@ -25,14 +25,18 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
 ]
 
+# Reads Codex's archived .jsonl.zst sessions; Python 3.14+ has zstd built in.
+dependencies = ["zstandard>=0.22; python_version < '3.14'"]
+
 [project.optional-dependencies]
-# Reads Codex's archived .jsonl.zst sessions on Python 3.10-3.13 (3.14+ has zstd built in).
-zstd = ["zstandard>=0.22"]
+# Kept so older `livermore[zstd]` install commands still work; it adds nothing now.
+zstd = []
 
 [project.urls]
 Repository = "https://github.com/cerdman/livermore"
 
 [project.scripts]
+livermore = "livermore.observatory:main"
 observatory = "livermore.observatory:main"
 
 [tool.setuptools]
