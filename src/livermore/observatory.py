@@ -782,7 +782,9 @@ def serve(args):
 
 
 def build_parser():
-    parser = argparse.ArgumentParser(prog="observatory", description=__doc__)
+    invoked = Path(sys.argv[0]).stem
+    prog = invoked if invoked in ("livermore", "observatory") else "livermore"
+    parser = argparse.ArgumentParser(prog=prog, description=__doc__)
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     parser.add_argument("--db", default=os.environ.get("LIVERMORE_DB", "observatory.sqlite3"),
                         help="SQLite database path (default: $LIVERMORE_DB or "

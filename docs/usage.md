@@ -1,23 +1,23 @@
 # Usage observatory prototype
 
-`observatory` is a metadata-only first slice of the [design](design.md). It reads local Codex and Claude Code session JSONL, can receive Claude Code's OpenTelemetry events live, stores token counts, request timings, and Codex meter snapshots in SQLite, and can export a portable NDJSON file for ingestion on another machine. It does not call model APIs, exhaust a subscription, or persist prompt/response text.
+`livermore` (also installed as `observatory`) is a metadata-only first slice of the [design](design.md). It reads local Codex and Claude Code session JSONL, can receive Claude Code's OpenTelemetry events live, stores token counts, request timings, and Codex meter snapshots in SQLite, and can export a portable NDJSON file for ingestion on another machine. It does not call model APIs, exhaust a subscription, or persist prompt/response text.
 
 ## Quick start
 
 Install the package as shown in the root README, then run these commands from the repository root. Use a stable, unique alias for each machine, and use the same account alias on every machine sharing one subscription.
 
 ```sh
-observatory --db ./observatory.sqlite3 scan \
+livermore --db ./observatory.sqlite3 scan \
   --machine-id macbook --account-alias personal
-observatory --db ./observatory.sqlite3 report --month 2026-10
-observatory --db ./observatory.sqlite3 export --out ./macbook-usage.ndjson
+livermore --db ./observatory.sqlite3 report --month 2026-10
+livermore --db ./observatory.sqlite3 export --out ./macbook-usage.ndjson
 ```
 
 Copy the NDJSON to the machine that owns the central database, then:
 
 ```sh
-observatory --db ./central.sqlite3 ingest --input ./macbook-usage.ndjson
-observatory --db ./central.sqlite3 report --month 2026-10
+livermore --db ./central.sqlite3 ingest --input ./macbook-usage.ndjson
+livermore --db ./central.sqlite3 report --month 2026-10
 ```
 
 Repeated scans and repeated imports update the same event IDs. `scan` skips files whose size and modification time have not changed since the last scan; pass `--full` to re-read everything (for example after changing `--account-alias`). Reports accept `--format json`. The NDJSON contains model names, usage counts, session IDs, meter percentages, and optional task labels, but no conversation or file contents. Treat it as private data. Export currently writes a complete snapshot (schema version 2; `ingest` still accepts version 1 files).
@@ -29,7 +29,7 @@ Session logs are the ledger: they cover past sessions and Codex's plan meters. C
 Start the receiver on the machine that owns the central database:
 
 ```sh
-observatory --db ./central.sqlite3 serve
+livermore --db ./central.sqlite3 serve
 ```
 
 It listens on `127.0.0.1:4318` and accepts OTLP/HTTP **JSON** logs at `/v1/logs`. Then, on each machine, add this to the `env` block of `~/.claude/settings.json` (repository-level settings cannot enable telemetry):
@@ -55,7 +55,7 @@ Use the same machine and account aliases you pass to `scan`. If a sender cannot 
 **Across a network.** Bind beyond localhost only with a token:
 
 ```sh
-LIVERMORE_TOKEN=change-me observatory --db ./central.sqlite3 serve --host 0.0.0.0
+LIVERMORE_TOKEN=change-me livermore --db ./central.sqlite3 serve --host 0.0.0.0
 ```
 
 and add `"OTEL_EXPORTER_OTLP_HEADERS": "Authorization=Bearer change-me"` to each sender. The receiver speaks plain HTTP; put it behind TLS (a reverse proxy, Tailscale, or an SSH tunnel) on untrusted networks.
@@ -77,10 +77,10 @@ The `scan` service mounts `~/.codex` and `~/.claude` read-only. The compose file
 Record the fee and exact billing dates once in the central database. A cycle report combines every machine tagged with the same account alias:
 
 ```sh
-observatory --db ./central.sqlite3 cycle \
+livermore --db ./central.sqlite3 cycle \
   --source codex --account-alias personal --plan plus \
   --cycle-start 2026-10-01 --cycle-end 2026-11-01 --fee-usd 20
-observatory --db ./central.sqlite3 cycle-report \
+livermore --db ./central.sqlite3 cycle-report \
   --source codex --account-alias personal --cycle-start 2026-10-01 \
   --prices ./pricebooks/prices.2026-10-08.json
 ```
@@ -92,7 +92,7 @@ The replacement-cost/fee ratio is shown only when all usage records in the cycle
 API replacement cost appears only for events whose model and date have a matching entry. Copy [prices.example.json](../pricebooks/prices.example.json) to `prices.json` in the repository root, add rates from a dated provider price source, then run:
 
 ```sh
-observatory --db ./central.sqlite3 report --month 2026-10 --prices ./prices.json
+livermore --db ./central.sqlite3 report --month 2026-10 --prices ./prices.json
 ```
 
 Rates are USD per million tokens. `effective_to` is exclusive. `source` is `codex` or `claude`. A nonzero token category without a known rate leaves the whole event unpriced, and the report shows coverage. For cache writes whose duration is unknown, set `cache_write_unknown_per_mtok` only if you have a defensible rate; otherwise leave it absent. Prices are intentionally not built into the program because they change and some requests use special pricing modes.
@@ -104,7 +104,7 @@ For a concrete example, [prices.2026-10-08.json](../pricebooks/prices.2026-10-08
 You can attach a lightweight outcome to a session without recording its content:
 
 ```sh
-observatory --db ./observatory.sqlite3 note fix-auth-timeout \
+livermore --db ./observatory.sqlite3 note fix-auth-timeout \
   --machine-id macbook --source codex --session-id SESSION_ID \
   --category bugfix --outcome accepted --elapsed-minutes 42 --interventions 2
 ```
