@@ -1,4 +1,4 @@
-# Livermore
+# Livermore - Claude/Codex Monthly Subscription Analytics
 
 A local-first AI usage observatory. It reads Codex and Claude Code session logs, can also receive Claude Code's OpenTelemetry events, stores usage metadata in SQLite, exports portable NDJSON, and reports token usage, latency, and estimated API replacement cost. It does not store prompt or response text.
 
